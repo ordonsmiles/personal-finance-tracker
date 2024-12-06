@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React, { useEffect, useState } from 'react';
+import Header from './components/header';
 
-function App() {
+
+const App = () => {
+  const [data, setData] = useState([]);
+
+  // Fetch data from the backend when the app loads
+  useEffect(() => {
+    fetch('http://localhost:5001/api/transactions')
+      .then(response => response.json())
+      .then(data => setData(data))
+      .catch(error => console.log(error));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <div>
+        <h2>Transactions</h2>
+        <ul>
+          {data.map((transaction, index) => (
+            <li key={index}>
+              {transaction.description}: ${transaction.amount}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
-}
+};
 
 export default App;
+
